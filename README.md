@@ -2,3 +2,9 @@
 Repo del Curso de Backend 
 
 jesus
+anthony
+Nelho Fabrizio Espinoza Manrique
+Ruben
+Daniela
+Anderson
+javier
