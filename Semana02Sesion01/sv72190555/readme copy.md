@@ -5,7 +5,7 @@ ls
 ls -la
 ls -lah
 
-pwd
+pwd //
 
 cd 
 cd ..
