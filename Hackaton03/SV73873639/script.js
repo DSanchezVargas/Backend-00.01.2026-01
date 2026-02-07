@@ -126,9 +126,23 @@ async function ej07() {
 }
 
 async function ej08() {
-    let n1=await pedirDato("Nota 1", false), n2=await pedirDato("Nota 2", false), n3=await pedirDato("Nota 3", false);
-    if (!n1 || !n2 || !n3) return;
-    botRespuesta(`Promedio de <b>${n1}, ${n2}, ${n3}</b>: ${((Number(n1)+Number(n2)+Number(n3))/3).toFixed(2)}.`);
+    // Configurado: Sin negativos, permite decimales, min 0, max 20
+    let n1 = await pedirDato("Nota 1 (0-20):", false, false, true, 0, 20);
+    if (!n1) return;
+    let n2 = await pedirDato("Nota 2 (0-20):", false, false, true, 0, 20);
+    if (!n2) return;
+    let n3 = await pedirDato("Nota 3 (0-20):", false, false, true, 0, 20);
+    if (!n3) return;
+
+    let promedio = (Number(n1) + Number(n2) + Number(n3)) / 3;
+    let esAprobado = promedio >= 10.5;
+
+    botRespuesta(`
+        Tus notas ingresadas: <b>${n1}, ${n2}, ${n3}</b>.<br><br>
+        <b>Promedio Final:</b> ${promedio.toFixed(2)}<br>
+        <b>Estado:</b> ${esAprobado ? '<span style="color:green">Aprobado</span>' : '<span style="color:red">Desaprobado</span>'}<br><br>
+        <i>Explicación:</i> Sumamos tus tres notas de la escala 0-20 y las dividimos entre 3.
+    `, esAprobado);
 }
 
 async function ej09() {
