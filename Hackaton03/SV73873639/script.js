@@ -7,7 +7,15 @@ const IMG_FALLO = "./Images/Exercise Wrong.webp";
 
 /* --- MOTOR DE VALIDACIÓN Y REINTENTO --- */
 
-async function pedirDato(titulo, permitirNegativo = true, esSoloLetra = false) {
+/**
+ * @param {string} titulo - Título de la pregunta
+ * @param {boolean} permitirNegativo - Bloqueo de negativos
+ * @param {boolean} esSoloLetra - Para el ejercicio de vocales
+ * @param {boolean} permiteDecimal - Para notas o sueldos
+ * @param {number} min - Valor mínimo permitido
+ * @param {number} max - Valor máximo permitido
+ */
+async function pedirDato(titulo, permitirNegativo = true, esSoloLetra = false, permiteDecimal = false, min = null, max = null) {
     let valido = false;
     let respuesta;
 
@@ -17,43 +25,48 @@ async function pedirDato(titulo, permitirNegativo = true, esSoloLetra = false) {
             imageUrl: IMG_PRINCIPAL,
             imageWidth: 90, imageHeight: 90,
             input: 'text',
-            inputPlaceholder: esSoloLetra ? "Escribe una letra..." : "Solo números, sin símbolos...",
+            inputPlaceholder: esSoloLetra ? "Escribe una letra..." : "Solo números...",
             confirmButtonText: 'Enviar',
             showCancelButton: true,
             customClass: { popup: 'bot-popup animate__animated animate__fadeInDown' },
             confirmButtonColor: '#4f46e5'
         });
 
-        if (res === undefined) return null; // Si cancela el prompt
+        if (res === undefined) return null; 
         respuesta = res.trim();
 
         if (esSoloLetra) {
-            // Validar que sea solo una letra y nada de símbolos
             if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ]$/.test(respuesta)) {
-                await Swal.fire({
-                    title: "Letra Inválida",
-                    html: `"${respuesta}" no es una letra válida o contiene símbolos/números.`,
-                    icon: "warning"
-                });
+                await Swal.fire({ title: "Letra Inválida", text: "Solo se permite una letra, sin símbolos.", icon: "warning" });
                 continue;
             }
         } else {
-            // Validar números y BLOQUEAR símbolos #$%&/()=?...
-            const patronSencillo = /^-?\d+$/;
-            if (!patronSencillo.test(respuesta)) {
+            // Regex ajustada: permite decimales si se solicita
+            const patron = permiteDecimal ? /^-?\d+(\.\d+)?$/ : /^-?\d+$/;
+            
+            if (!patron.test(respuesta)) {
                 await Swal.fire({
                     title: "Formato Incorrecto",
-                    html: `El valor "<b>${respuesta}</b>" tiene símbolos, letras o espacios.<br><b>No uses:</b> !"#$%&/()=?`,
+                    html: `El valor "<b>${respuesta}</b>" no es válido.<br>Recuerda: ${permiteDecimal ? 'Puedes usar un punto para decimales.' : 'Solo números enteros.'}<br><b>Prohibido:</b> símbolos como #$%&/()=?`,
                     icon: "warning"
                 });
                 continue;
             }
-            if (!permitirNegativo && Number(respuesta) < 0) {
-                await Swal.fire({
-                    title: "Sin Negativos",
-                    text: `El número ${respuesta} debe ser positivo para este ejercicio.`,
-                    icon: "error"
-                });
+
+            let num = Number(respuesta);
+
+            if (!permitirNegativo && num < 0) {
+                await Swal.fire({ title: "Sin Negativos", text: "No se permiten valores menores a cero.", icon: "error" });
+                continue;
+            }
+
+            // Validación de Rango (Para el 0-20 de notas)
+            if (min !== null && num < min) {
+                await Swal.fire({ title: "Valor muy bajo", text: `El mínimo permitido es ${min}.`, icon: "error" });
+                continue;
+            }
+            if (max !== null && num > max) {
+                await Swal.fire({ title: "Valor muy alto", text: `El máximo permitido es ${max}.`, icon: "error" });
                 continue;
             }
         }
