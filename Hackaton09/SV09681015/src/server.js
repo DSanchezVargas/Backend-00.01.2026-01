@@ -37,7 +37,8 @@ app.use('/courses',  coursesRouter);
 app.use('/courses/:courseId/lessons', lessonsRouter);
 
 // PUT/DELETE /lessons/:id (sin courseId prefix)
-app.put('/lessons/:id',    lessonsRouter);
+/*app.put('/lessons/:id',    lessonsRouter);*/
+app.use('/lessons', lessonsRouter);
 app.delete('/lessons/:id', lessonsRouter);
 
 // Nested: /courses/:courseId/enroll  &  /courses/:courseId/enrollments
