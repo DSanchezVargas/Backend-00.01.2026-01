@@ -1,4 +1,4 @@
-
+require("dotenv").config();
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -7,14 +7,11 @@ const app = express();
 app.use(express.json());
 
 //base de datos 
-
-const USUARIO = "MiUsuario";              
-const CLAVE = "123456789..";               
-const CLUSTER = "mongodb+srv://MiUsuario:123456789@cluster0.x60mrnl.mongodb.net/SV003007187?retryWrites=true&w=majority";  
-const codigoAlumno = "SV003007187";        
+const codigoAlumno = process.env.DB_NAME;
+     
 
 //  MongoDB Atlas
-const url = `mongodb://${USUARIO}:${CLAVE}@ac-suskias-shard-00-00.x60mrnl.mongodb.net:27017,ac-suskias-shard-00-01.x60mrnl.mongodb.net:27017,ac-suskias-shard-00-02.x60mrnl.mongodb.net:27017/${codigoAlumno}?ssl=true&replicaSet=atlas-tu3o76-shard-0&authSource=admin&retryWrites=true&w=majority`;
+ const url = `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@ac-suskias-shard-00-00.x60mrnl.mongodb.net:27017,ac-suskias-shard-00-01.x60mrnl.mongodb.net:27017,ac-suskias-shard-00-02.x60mrnl.mongodb.net:27017/${process.env.DB_NAME}?ssl=true&replicaSet=atlas-tu3o76-shard-0&authSource=admin&retryWrites=true&w=majority`;
 // Coneccion a MongoDB Atlas
 mongoose.connect(url)
   .then(() => console.log(' Conectado a MongoDB Atlas - BD:', codigoAlumno))
@@ -32,7 +29,7 @@ const inventarioSchema = new mongoose.Schema({
     tornillos: { type: Number, default: 0 },
     barniz: { type: Number, default: 0 },
     
-    // Personal (
+    // Personal 
     horasNormales: { type: Number, default: 0 },
     horasExtras: { type: Number, default: 0 },
     
@@ -167,8 +164,8 @@ app.post('/api/producir', async (req, res) => {
 
 const PUERTO = 3000;
 app.listen(PUERTO, () => {
-    console.log('========================================');
+    
     console.log('BASE DE DATOS:', codigoAlumno);
     console.log('Servidor: http://localhost:' + PUERTO);
-    console.log('========================================');
+   
 });
