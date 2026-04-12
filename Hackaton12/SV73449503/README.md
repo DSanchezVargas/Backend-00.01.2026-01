@@ -29,5 +29,6 @@ npm run dev
   "descripcion": "Leche deslactosada",
   "fecha": "2026-04-10",
   "esCompletado": false
+  
 }
 ```
