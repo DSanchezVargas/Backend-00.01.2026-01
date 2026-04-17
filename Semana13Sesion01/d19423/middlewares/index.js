@@ -3,5 +3,4 @@ const async = require('./async');
 
 module.exports = {
     validateUser, async
-
 }
