@@ -1,5 +1,6 @@
 var router =  require('express').Router();
 const healthController = require('../controllers/health')
+const v1Router = require('./v1');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -19,5 +20,8 @@ router.route('/profile')
   .delete((req,res)=>res.json({message: "delete Profile"}))
   // .head((req,res)=>res.json({message: "head Profile"}))
   // .options((req,res)=>res.json({message: "options Profile"}))
+
+router.use('/v1', v1Router );
+router.use('/v2',require('./v2'))
 
 module.exports = router;

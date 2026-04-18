@@ -18,6 +18,9 @@ const error = require('./middlewares/errorHandler')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
+const swaggerUi = require('swagger-ui-express');
+const swaggerFile = require('./swagger_output.json');
+
 var app = express();
 
 // view engine setup
@@ -51,6 +54,9 @@ app.use(error);
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
