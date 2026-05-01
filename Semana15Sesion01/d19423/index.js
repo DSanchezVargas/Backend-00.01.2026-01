@@ -30,6 +30,7 @@ app.use(
 
 
 require('./src/routes/auth.route')(app);
+require('./src/routes/user.route')(app);
 
 const db = require('./src/models');
 
