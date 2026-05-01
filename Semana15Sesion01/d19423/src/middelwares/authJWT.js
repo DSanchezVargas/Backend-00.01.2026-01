@@ -5,7 +5,8 @@ const User = db.user;
 const Role = db.role;
 
 const verifyToken = (req, res, next) => {
-    let token = res.session?.token;
+    let token = req.session?.token;
+    console.log(req.session?.token);
     if (!token) return res.status(401).send({ message: `No estas enviando el token` });
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (err) return res.status(401).send({ message: `Token Invalido` });
